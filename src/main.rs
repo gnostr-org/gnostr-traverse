@@ -67,7 +67,6 @@ fn main() -> Result<(), Box<dyn Error>> {
             )
         } else if start == end {
             println!("No reduction in size!")
-        } else {
         }
     }
 

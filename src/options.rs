@@ -1,10 +1,8 @@
 //! Options parsing and configuration for command line interfaces.
+use crate::tasks::*;
 use clap::{App, AppSettings, Arg};
 use std::ffi::OsString;
 use std::path::PathBuf;
-
-use crate::tasks::*;
-use crate::Path;
 
 /// Options struct to store configuration state.
 pub struct Options {

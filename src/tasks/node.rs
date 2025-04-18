@@ -20,8 +20,8 @@ impl Task for NodeTask {
         //super::del(dir, "node_modules")?;
         //super::del(dir, ".npm")
 
-        let _ = super::cmd(dir, "git", &["status"])?;
-        let _ = super::cmd(dir, "git", &["reflog", "expire", "--all", "--expire=now"])?;
+        super::cmd(dir, "git", &["status"])?;
+        super::cmd(dir, "git", &["reflog", "expire", "--all", "--expire=now"])?;
         super::cmd(dir, "git", &["gc", "--prune=now", "--aggressive"])
     }
 }

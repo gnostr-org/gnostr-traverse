@@ -34,9 +34,10 @@ pub trait Task {
 fn is_program_in_path(program: &str) -> bool {
     if let Ok(path) = env::var("PATH") {
         for p in path.split(":") {
+            println!("p={}", p);
             let p_str = format!("{}/{}", p, program);
             if fs::metadata(&p_str).is_ok() {
-                println!("Trying: {}", p_str);
+                println!("p_str={}", p_str);
                 return true;
             }
         }
@@ -80,8 +81,12 @@ pub fn cmd(dir: &str, cmd: &str, args: &[&str]) -> io::Result<()> {
 fn is_directory(filepath: &str) -> io::Result<bool> {
     use std::path::Path;
     let path = Path::new(filepath);
+    println!("path_to_string(path)={:?}", path_to_string(path).unwrap());
     match fs::metadata(path) {
-        Ok(metadata) => Ok(metadata.is_dir()),
+        Ok(metadata) => {
+            println!("path_to_string(path)={:?}", path_to_string(path));
+            Ok(metadata.is_dir())
+        }
         Err(e) => Err(e),
     }
 }
@@ -91,70 +96,28 @@ fn path_to_string(path: &Path) -> Result<String, std::ffi::OsString> {
     path.as_os_str().to_os_string().into_string()
 }
 
-/// Purges a location on disk, similar to `rm -rf`.
 pub fn filepath(parent: &str, child: &str) -> io::Result<()> {
-    let dir_path = String::from(format!("{}/{}", parent, child));
-    println!("{}", dir_path);
+    let dir_path = format!("{}/{}", parent, child);
+    println!("dir_path={}", dir_path);
 
-    if let dir = is_directory(&dir_path.clone()) {
-        println!("'{}' is a directory.", dir_path);
-        println!("{:?}", dir);
-    } else if let dir = !is_directory(&dir_path.clone()).expect("") {
-        println!(
-            "'{}' is not a directory (or the path doesn't exist).",
-            dir_path
-        );
-
-        println!("{}", dir);
-    } else {
-    }
-
-    // check for errors that we're ok with
-    //if let Err(err) = fs::remove_dir_all(dir_path) {
-    //    // if already gone, happy days are upon us
-    //    if err.kind() == ErrorKind::NotFound {
-    //        return Ok(());
-    //    }
-    //    // if there's a permission error, we don't care
-    //    if err.kind() == ErrorKind::PermissionDenied {
-    //        return Ok(());
-    //    }
-    //    if err.kind() == ErrorKind::Other {
-    //        let file_path = format!("{}/{}", parent, child);
-    //        println!("{}", file_path);
-    //        // check for errors that we're ok with
-    //        if let Err(err) = fs::remove_file(file_path) {
-    //            // if already gone, happy days are upon us
-    //            if err.kind() == ErrorKind::NotFound {
-    //                return Ok(());
-    //            }
-
-    //            // if there's a permission error, we don't care
-    //            if err.kind() == ErrorKind::PermissionDenied {
-    //                return Ok(());
-    //            }
-    //            if err.kind() == ErrorKind::Other {
-    //                return Ok(());
-    //            }
-
-    //            // others, bad!
-    //            // return Err(err);
-    //            println!("{:?}", Some(err));
-    //        }
-
-    //        return Ok(());
-    //    }
-
-    //    // others, bad!
-    //    // return Err(err);
-    //    println!("{:?}", Some(err));
-    //}
-
+    if let Ok(dir) = is_directory(&dir_path.clone()) {
+        println!("dir={}", dir);
+        match dir {
+            true => {
+                println!("'{}' is a directory.", dir);
+            }
+            false => {
+                println!("{:?} is NOT a directory!", dir);
+            }
+        }
+    };
+    //let dir = !is_directory(&dir_path.clone()).expect("");
     Ok(())
 }
 
 /// Purges a location on disk, similar to `rm -rf`.
 pub fn del(parent: &str, child: &str) -> io::Result<()> {
+    let _ = filepath(parent, child);
     let dir_path = format!("{}/{}", parent, child);
     println!("{}", dir_path);
 

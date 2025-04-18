@@ -12,9 +12,15 @@ impl Task for CargoTask {
     }
 
     fn job(&self, dir: &str) -> io::Result<()> {
-        super::cmd(dir, "cargo", &["clean"])?;
-        super::del(dir, "target")?;
-        super::del(dir, "vendor") //?;
-                                  //super::del(dir, ".cargo/registry")
+        super::cmd(dir, "cargo", &["build"])?;
+        super::cmd(dir, "cargo", &["+nightly", "fmt"])?;
+        super::cmd(dir, "cargo", &["+nightly", "build"])?;
+        //super::cmd(dir, "cargo", &["clean"])?;
+
+        //super::del(dir, "target")?;
+        //super::del(dir, "vendor") //?;
+        //super::del(dir, ".cargo/registry")
+
+        super::cmd(dir, "git", &["diff", "HEAD"])
     }
 }
