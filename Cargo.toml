@@ -1,0 +1,20 @@
+[package]
+name = "gnostr-traverse"
+version = "0.0.1" # remember to update html_root_url
+authors = ["gnostr <admin@gnostr.org>", "Isaac Whitfield <iw@whitfin.io>"]
+description = "walk a directory structure and do something"
+repository = "https://github.com/gnostr-org/gnostr-traverse"
+keywords = ["backup", "compression", "clean"]
+categories = ["algorithms", "command-line-utilities", "filesystem"]
+readme = "README.md"
+edition = "2021"
+license = "MIT"
+
+[dependencies]
+clap = "2.33"
+walkdir = "2.2"
+
+[profile.release]
+codegen-units = 1
+opt-level = 3
+lto = true
